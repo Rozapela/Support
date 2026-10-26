@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${ticket.subject}">Заявка</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${ticket.subject}"></h1>
+
+    <p><b>Статус:</b> <span class="status" th:classappend="'status-' + ${ticket.status.name()}" th:text="${ticket.status.title}"></span></p>
+    <p><b>Дата создания:</b>
+        <span th:text="${#temporals.format(ticket.createdAt, 'dd.MM.yyyy HH:mm')}"></span>
+    </p>
+
+    <p><b>Описание:</b></p>
+    <div class="description" th:text="${ticket.description}"></div>
+
+    <div class="actions">
+        <a class="btn" th:href="@{'/ticket/' + ${ticket.id} + '/edit'}">Редактировать</a>
+        <form method="post" th:action="@{'/ticket/' + ${ticket.id} + '/delete'}"
+              onsubmit="return confirm('Удалить заявку?')">
+            <button type="submit" class="btn danger">Удалить</button>
+        </form>
+        <a th:href="@{/}">Назад к списку</a>
+    </div>
+</div>
+</body>
+</html>

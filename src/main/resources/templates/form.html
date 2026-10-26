@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${isEdit} ? 'Редактирование' : 'Новая заявка'">Заявка</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${isEdit} ? 'Редактировать заявку' : 'Новая заявка'"></h1>
+
+    <form method="post" th:action="@{/ticket/save}">
+        <input type="hidden" name="id" th:if="${isEdit}" th:value="${ticket.id}">
+
+        <label>Тема</label>
+        <input type="text" name="subject" th:value="${ticket.subject}" required>
+
+        <label>Описание</label>
+        <textarea name="description" rows="6" required th:text="${ticket.description}"></textarea>
+
+        <label>Статус</label>
+        <select name="status">
+            <option th:each="s : ${statuses}"
+                    th:value="${s}"
+                    th:text="${s.title}"
+                    th:selected="${isEdit and s == ticket.status}"></option>
+        </select>
+
+        <button type="submit" style="width:100%; margin-top:24px;">Сохранить</button>
+    </form>
+
+    <p><a th:href="@{/}">Отмена</a></p>
+</div>
+</body>
+</html>

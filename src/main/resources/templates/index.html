@@ -1,0 +1,69 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Мои заявки</title>
+        <link rel="stylesheet" th:href="@{/css/style.css}" />
+    </head>
+    <body>
+        <div class="container wide">
+            <div class="topbar">
+                <h1>Заявки техподдержки</h1>
+                <div>
+                    <span>Пользователь: <b th:text="${login}"></b></span>
+                    <form method="post" th:action="@{/logout}">
+                        <button type="submit" class="link-btn">Выйти</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="filters">
+                <form method="get" th:action="@{/}">
+                    <label>Фильтр по статусу:</label>
+                    <select name="status" onchange="this.form.submit()">
+                        <option value="">Все</option>
+                        <option
+                            th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${s.title}"
+                            th:selected="${s == selectedStatus}"
+                        ></option>
+                    </select>
+                </form>
+                <a class="btn" th:href="@{/ticket/new}">Добавить заявку</a>
+            </div>
+
+            <p th:if="${#lists.isEmpty(tickets)}">Заявок пока нет.</p>
+
+            <table th:unless="${#lists.isEmpty(tickets)}">
+                <thead>
+                    <tr>
+                        <th>Тема</th>
+                        <th>Статус</th>
+                        <th>Дата создания</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="t : ${tickets}">
+                        <td>
+                            <a
+                                th:href="@{'/ticket/' + ${t.id}}"
+                                th:text="${t.subject}"
+                            ></a>
+                        </td>
+                        <td>
+                            <span
+                                class="status"
+                                th:classappend="'status-' + ${t.status.name()}"
+                                th:text="${t.status.title}"
+                            ></span>
+                        </td>
+                        <td
+                            th:text="${#temporals.format(t.createdAt, 'dd.MM.yyyy HH:mm')}"
+                        ></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
